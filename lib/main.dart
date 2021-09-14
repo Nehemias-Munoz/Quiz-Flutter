@@ -24,6 +24,23 @@ class QuizApp extends StatefulWidget {
 }
 
 class _QuizAppState extends State<QuizApp> {
+  // lugar para la creacion de variables
+  int questionNumber = 0;
+
+  List<Widget> scoreKeeper = [];
+
+  List<String> questions = [
+    'You can lead a cow down stairs but not up stairs.',
+    'Approximately one quarter of human bones are in the feet.',
+    'A slug\'s blood is green.',
+  ];
+
+  List<bool> answer = [
+    false,
+    true,
+    true,
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -36,7 +53,7 @@ class _QuizAppState extends State<QuizApp> {
             flex: 5,
             child: Center(
               child: Text(
-                'Questions',
+                questions[questionNumber],
                 style: TextStyle(fontSize: 23.0, color: Colors.white),
               ),
             ),
@@ -50,7 +67,17 @@ class _QuizAppState extends State<QuizApp> {
                 'True',
                 style: TextStyle(fontSize: 20.0),
               ),
-              onPressed: () {},
+              onPressed: () {
+                bool correctAnswer = answer[questionNumber];
+                if (correctAnswer == true) {
+                  print('Correct');
+                } else {
+                  print('Wrong');
+                }
+                setState(() {
+                  questionNumber++;
+                });
+              },
             ),
           ),
           SizedBox(height: 15.0),
@@ -63,21 +90,28 @@ class _QuizAppState extends State<QuizApp> {
                 'False',
                 style: TextStyle(fontSize: 20.0),
               ),
-              onPressed: () {},
+              onPressed: () {
+                bool correctAnswer = answer[questionNumber];
+                if (correctAnswer == false) {
+                  print('Correct');
+                } else {
+                  print('Wrong');
+                }
+                setState(() {
+                  questionNumber++;
+                });
+              },
             ),
           ),
           SizedBox(height: 10.0),
           Row(
-            children: [
-              Icon(
-                Icons.check,
-                color: Colors.green,
-              ),
-              Icon(Icons.dangerous_outlined, color: Colors.red),
-            ],
+            children: scoreKeeper,
           ),
         ],
       ),
     );
   }
 }
+// question1: 'You can lead a cow down stairs but not up stairs.', false,
+// question2: 'Approximately one quarter of human bones are in the feet.', true,
+// question3: 'A slug\'s blood is green.', true,
