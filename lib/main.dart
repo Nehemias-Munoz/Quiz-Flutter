@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_app/quiz_brain.dart';
 
 void main() => runApp(MyApp());
 
@@ -25,22 +26,10 @@ class QuizApp extends StatefulWidget {
 
 class _QuizAppState extends State<QuizApp> {
   // lugar para la creacion de variables
-  int questionNumber = 0;
 
-  List<Widget> scoreKeeper = [];
+  List<Widget> scoreKeeper = []; // lista de aciertos
 
-  List<String> questions = [
-    'You can lead a cow down stairs but not up stairs.',
-    'Approximately one quarter of human bones are in the feet.',
-    'A slug\'s blood is green.',
-  ];
-
-  List<bool> answer = [
-    false,
-    true,
-    true,
-  ];
-
+  QuizBrain quizBrain = QuizBrain();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -53,7 +42,7 @@ class _QuizAppState extends State<QuizApp> {
             flex: 5,
             child: Center(
               child: Text(
-                questions[questionNumber],
+                quizBrain.getQuestionText(),
                 style: TextStyle(fontSize: 23.0, color: Colors.white),
               ),
             ),
@@ -68,14 +57,14 @@ class _QuizAppState extends State<QuizApp> {
                 style: TextStyle(fontSize: 20.0),
               ),
               onPressed: () {
-                bool correctAnswer = answer[questionNumber];
+                bool correctAnswer = quizBrain.getQuestionAnswer();
                 if (correctAnswer == true) {
                   print('Correct');
                 } else {
                   print('Wrong');
                 }
                 setState(() {
-                  questionNumber++;
+                  quizBrain.nextQuestion();
                 });
               },
             ),
@@ -91,14 +80,14 @@ class _QuizAppState extends State<QuizApp> {
                 style: TextStyle(fontSize: 20.0),
               ),
               onPressed: () {
-                bool correctAnswer = answer[questionNumber];
+                bool correctAnswer = quizBrain.getQuestionAnswer();
                 if (correctAnswer == false) {
                   print('Correct');
                 } else {
                   print('Wrong');
                 }
                 setState(() {
-                  questionNumber++;
+                  quizBrain.nextQuestion();
                 });
               },
             ),
