@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quiz_app/quiz_brain.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 void main() => runApp(MyApp());
 
@@ -50,24 +51,13 @@ class _QuizAppState extends State<QuizApp> {
           Expanded(
             flex: 1,
             child: ElevatedButton(
-              style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.green)),
-              child: Text(
-                'True',
-                style: TextStyle(fontSize: 20.0),
-              ),
-              onPressed: () {
-                bool correctAnswer = quizBrain.getQuestionAnswer();
-                if (correctAnswer == true) {
-                  print('Correct');
-                } else {
-                  print('Wrong');
-                }
-                setState(() {
-                  quizBrain.nextQuestion();
-                });
-              },
-            ),
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.green)),
+                child: Text(
+                  'True',
+                  style: TextStyle(fontSize: 20.0),
+                ),
+                onPressed: () => checkAnswer(true)),
           ),
           SizedBox(height: 15.0),
           Expanded(
@@ -79,28 +69,60 @@ class _QuizAppState extends State<QuizApp> {
                 'False',
                 style: TextStyle(fontSize: 20.0),
               ),
-              onPressed: () {
-                bool correctAnswer = quizBrain.getQuestionAnswer();
-                if (correctAnswer == false) {
-                  print('Correct');
-                } else {
-                  print('Wrong');
-                }
-                setState(() {
-                  quizBrain.nextQuestion();
-                });
-              },
+              onPressed: () => checkAnswer(false),
             ),
           ),
           SizedBox(height: 10.0),
-          Row(
+          Wrap(
+            alignment: WrapAlignment.start,
             children: scoreKeeper,
           ),
         ],
       ),
     );
   }
+
+  void checkAnswer(bool response) {
+    setState(() {
+      if (quizBrain.isFinished() == true) {
+        Alert(
+            closeFunction: () {
+              Navigator.pop(context);
+              setState(() {
+                quizBrain.resetQuestionNumber();
+                scoreKeeper = [];
+              });
+            },
+            onWillPopActive: true,
+            context: context,
+            type: AlertType.warning,
+            title: 'Finish',
+            buttons: [
+              DialogButton(
+                child: Text('Reset'),
+                onPressed: () {
+                  Navigator.pop(context);
+                  setState(() {
+                    quizBrain.resetQuestionNumber();
+                    scoreKeeper = [];
+                  });
+                },
+              )
+            ]).show();
+      } else {
+        bool correctAnswer = quizBrain.getQuestionAnswer();
+        if (correctAnswer == response) {
+          scoreKeeper.add(Icon(
+            Icons.check,
+            color: Colors.green,
+          ));
+        } else {
+          scoreKeeper.add(Icon(
+            Icons.close,
+            color: Colors.red,
+          ));
+        }
+      }
+    });
+  }
 }
-// question1: 'You can lead a cow down stairs but not up stairs.', false,
-// question2: 'Approximately one quarter of human bones are in the feet.', true,
-// question3: 'A slug\'s blood is green.', true,

@@ -49,21 +49,24 @@ class QuizBrain {
         questionAnswer: true),
   ];
 
-  int questionNumber = 0; // numero de pregunta actual
+  int _questionNumber = 0; // numero de pregunta actual
 
   String getQuestionText() {
-    return _questionBank[questionNumber].questionText;
+    return _questionBank[_questionNumber].questionText;
   }
 
   bool getQuestionAnswer() {
-    return _questionBank[questionNumber].questionAnswer;
+    return _questionBank[_questionNumber].questionAnswer;
   }
 
-  void nextQuestion() {
-    if (_questionBank.length == questionNumber + 1) {
-      questionNumber = 0;
+  bool isFinished() {
+    if (_questionBank.length == _questionNumber + 1) {
+      return true;
     } else {
-      questionNumber++;
+      _questionNumber++;
+      return false;
     }
   }
+
+  void resetQuestionNumber() => _questionNumber = 0;
 }
